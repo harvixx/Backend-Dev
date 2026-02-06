@@ -27,7 +27,7 @@ app.get("/api/notes", async (req, res) => {
 })
 app.delete("/api/notes/:id", async (req, res) => {
     try {
-        const noteID = req.params.id; 
+        const noteID = req.params.id;
         await notesModel.findByIdAndDelete(noteID)
         res.status(200).json("Note Deleted")
     } catch (error) {
@@ -36,7 +36,7 @@ app.delete("/api/notes/:id", async (req, res) => {
 })
 app.patch("/api/notes/:id", async (req, res) => {
     try {
-        const allowUpdates = ["title","Desc"];
+        const allowUpdates = ["title", "Desc"];
         const Update = {};
 
         allowUpdates.forEach((a) => {
@@ -60,18 +60,14 @@ app.patch("/api/notes/:id", async (req, res) => {
         })
     }
     catch (error) {
-        console.log("Server Error"+error);
+        console.log("Server Error" + error);
     }
 })
+const frontendPath = path.join(__dirname, "../Frontend/dist");
 
-app.use(
-    express.static(
-        path.join(__dirname,"../../Frontend/dist")
-    )
-)
-app.get("*name",(req,res)=>{
-    res.sendFile(
-        path.join(__dirname,"../../Frontend/dist/index.html")
-    )
-})
+app.get("*name", (req, res) => {
+    res.sendFile(path.join(frontendPath, "index.html"));
+});
+app.use(express.static(frontendPath));
+
 module.exports = app;

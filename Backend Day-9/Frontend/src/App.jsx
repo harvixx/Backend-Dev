@@ -149,7 +149,7 @@ const App = () => {
     group-hover:opacity-100 group-hover:scale-100 active:scale-90"></i>
             <i onClick={() => {
               handleEditClick(e._id, e.title, e.Desc)
-            }} title='Remove' className="cursor-pointer ri-pencil-line absolute right-2 bottom-2 text-white
+            }} title='Edit' className="cursor-pointer ri-pencil-line absolute right-2 bottom-2 text-white
     opacity-0 scale-0
     transition-all duration-100
     group-hover:opacity-100 group-hover:scale-100 active:scale-90"></i>
