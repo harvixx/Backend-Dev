@@ -10,7 +10,7 @@ const Port = 3000;
                 console.log("Server is running");
             })
         } catch (error) {
-            console.log("Failed to start thr server ",error);
+            console.log("Failed to start the server ",error);
             process.exit(1);
         }
     }
