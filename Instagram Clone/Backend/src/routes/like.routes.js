@@ -5,5 +5,5 @@ const validateObjectId = require("../middleware/validateObjectId");
 const likeRouter = express.Router();
 
 likeRouter.post("/like/:postid", authMiddleware, validateObjectId, likePost);
-likeRouter.post("/Unlike/:postid", authMiddleware, validateObjectId, UnlikePost);
+likeRouter.delete("/unlike/:postid", authMiddleware, validateObjectId, UnlikePost);
 module.exports = likeRouter;

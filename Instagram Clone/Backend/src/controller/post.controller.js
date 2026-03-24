@@ -1,6 +1,7 @@
 const imagekit = require("@imagekit/nodejs");
 const { toFile } = require("@imagekit/nodejs");
 const Post = require("../models/post.model");
+const likeModel = require("../models/like.model");
 const Imagekit = new imagekit({
     privateKey: process.env.IMAGEKIT_PRIVATE_KEY
 });
@@ -24,6 +25,16 @@ async function createPost(req, res) {
         });
     } catch (error) {
         console.error(error);
+        if (error.name === "ValidationError") {
+
+            const errors = Object.values(error.errors).map(err => err.message);
+
+            return res.status(400).json({
+                success: false,
+                errors
+            });
+        }
+
         return res.status(500).json({
             message: "Internal server error"
         });
@@ -80,4 +91,39 @@ async function getpostDetail(req, res) {
         });
     }
 }
-module.exports = { createPost, getallPost,getpostDetail};
+async function gethomefeed(req, res) {
+    try {
+        const posts = await Post.find()
+            .populate("userId", "username profileImage").sort({_id:-1})
+
+        if (posts.length <= 0) {
+            return res.status(404).json({
+                message: "Post not found"
+            });
+        }
+
+        const feedPosts = await Promise.all(posts.map(async (post) => {
+            const likesCount = await likeModel.countDocuments({ post: post._id })
+            const isLiked = await likeModel.exists({ post: post._id, user: req.user.id })
+
+            return {
+                ...post.toObject(),
+                likesCount,
+                isLiked: !!isLiked
+            }
+        }))
+
+        return res.status(200).json({
+            message: "Post fetched",
+            posts: feedPosts
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "Internal server error"
+        });
+    }
+}
+
+module.exports = { createPost, getallPost, getpostDetail, gethomefeed };

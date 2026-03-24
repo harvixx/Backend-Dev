@@ -1,36 +1,23 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { registerUser } from '../../../api/auth.api'
+import { Link } from 'react-router-dom'
+import { useRegister } from '../hooks/useRegister'
 
 const Register = () => {
-  const navigate = useNavigate()
+  const { register, loading, error } = useRegister();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: ""
   })
   const [ShowPassword, setShowPassword] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
   async function handleSubmit(e) {
     e.preventDefault()
-    try {
-      setLoading(true)
-      setError(null)
-      await registerUser(formData)
-      navigate("/login")
-    } catch (error) {
-      setError(error.response?.data?.message || "Something went wrong")
-    } finally {
-      setLoading(false)
-    }
+    await register(formData);
   }
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-neutral-950">
       <form onSubmit={handleSubmit}

@@ -1,32 +1,21 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { loginUser } from '../../../api/auth.api'
+import { Link } from 'react-router-dom'
+import { useLogin } from '../hooks/useLogin'
+
 const Login = () => {
-  const navigate = useNavigate()
+  const { login, loading, error } = useLogin()
   const [formData, setFormData] = useState({
     identifier: "",
     password: ""
   })
   const [ShowPassword, setShowPassword] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
   async function handleSubmit(e) {
     e.preventDefault()
-    try {
-      setLoading(true)
-      setError(null)
-      await loginUser(formData)
-      navigate("/home")
-    } catch (error) {
-      setError(error.response?.data?.message || "Something went wrong")
-    } finally {
-      setLoading(false)
-    }
+    await login(formData)
   }
   return (
     <div className="min-h-screen flex items-center justify-center bg-neutral-950">

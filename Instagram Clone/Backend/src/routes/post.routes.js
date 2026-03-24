@@ -1,5 +1,5 @@
 const express = require("express");
-const { createPost, getallPost, getpostDetail } = require("../controller/post.controller");
+const { createPost, getallPost, getpostDetail, gethomefeed } = require("../controller/post.controller");
 const multer = require("multer");
 const authMiddleware = require("../middleware/auth.middleware");
 const validateObjectId = require("../middleware/validateObjectId");
@@ -8,5 +8,5 @@ const postRouter = express.Router();
 postRouter.post("/createPost", authMiddleware, upload.single("imageUrl"), createPost);
 postRouter.get("/getpost", authMiddleware, getallPost);
 postRouter.get("/getpostDetail/:userid", authMiddleware, validateObjectId,getpostDetail);
-
+postRouter.get("/gethomefeed", authMiddleware, validateObjectId,gethomefeed);
 module.exports = postRouter;

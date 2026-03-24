@@ -125,4 +125,46 @@ async function login(req, res) {
         });
     }
 }
-module.exports = { register, login };
+async function getme(req, res) {
+    try {
+        const userId = req.user.id;
+
+        const user = await User.findById(userId);
+        return res.status(200).json({
+            user: {
+                username: user.username,
+                email: user.email,
+                bio: user.bio,
+                profileImage: user.profileImage
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "Internal server error"
+        });
+    }
+
+}
+async function logout(req, res) {
+    try {
+        res.clearCookie("accesstoken", {
+            httpOnly: true,
+            secure: false,
+            sameSite: "strict"
+        })
+
+        return res.status(200).json({
+            success: true,
+            message: "Logged out successfully"
+        })
+
+    } catch (error) {
+        console.error("Logout Error:", error)
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        })
+    }
+}
+module.exports = { register, login ,getme,logout };
